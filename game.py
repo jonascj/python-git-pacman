@@ -14,6 +14,7 @@ y = 400/2
 pacman_images = []
 for i in range(6):
     img = pg.image.load(f"images/pacman_{i}.png")
+    img = pg.transform.scale(img, (32,32))
     pacman_images.append(img)
 
 direction = None
@@ -54,8 +55,17 @@ while running:
     # Draw
     screen.fill((0,0,0))
 
-    r = tick%6
-    screen.blit(pacman_images[r], (x, y))
+    r = int((tick/2)%6)
+    if direction == "left":
+        screen.blit(pacman_images[r], (x, y))
+    elif direction == "right":
+        screen.blit(pg.transform.rotate(pacman_images[r],180), (x, y))
+    elif direction == "up":
+        screen.blit(pg.transform.rotate(pacman_images[r],-90), (x, y))
+    elif direction == "down":
+        screen.blit(pg.transform.rotate(pacman_images[r],90), (x, y))
+    else:
+        screen.blit(pacman_images[0], (x, y))
             
 
     # Update screen
