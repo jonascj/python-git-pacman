@@ -11,8 +11,10 @@ pg.display.set_caption("Pac-Man (clone)")
 x = 300/2 
 y = 400/2 
 
+direction = None
 running = True
 while running:
+
 
     # Event loop
     events = pg.event.get()
@@ -22,13 +24,26 @@ while running:
 
         elif event.type == pg.KEYDOWN:
             if event.key == pg.K_LEFT:
-                x = x-5
+                direction = "left"
             elif event.key == pg.K_RIGHT:
-                x = x+5
+                direction = "right"
             elif event.key == pg.K_UP:
-                y = y-5
+                direction = "up"
             elif event.key == pg.K_DOWN:
-                y = y+5
+                direction = "down"
+            elif event.key == pg.K_ESCAPE:
+                running = False
+
+    # Move
+    if direction == "left":
+        x = x - 5
+    elif direction == "right":
+        x = x + 5
+    elif direction == "up":
+        y = y - 5
+    elif direction == "down":
+        y = y + 5
+
 
     # Draw
     screen.fill((0,0,0))
