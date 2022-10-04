@@ -11,6 +11,8 @@ pg.display.set_caption("Pac-Man (clone)")
 x = 300/2 
 y = 400/2 
 
+img = pg.image.load("pacman.png")
+
 direction = None
 running = True
 while running:
@@ -48,7 +50,8 @@ while running:
     # Draw
     screen.fill((0,0,0))
 
-    pg.draw.circle(screen, (220,220,0), (x, y), 20)
+    #pg.draw.circle(screen, (220,220,0), (x, y), 20)
+    screen.blit(img, (x, y))
             
 
     # Update screen
