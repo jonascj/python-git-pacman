@@ -11,10 +11,14 @@ pg.display.set_caption("Pac-Man (clone)")
 x = 300/2 
 y = 400/2 
 
-img = pg.image.load("pacman.png")
+pacman_images = []
+for i in range(6):
+    img = pg.image.load(f"images/pacman_{i}.png")
+    pacman_images.append(img)
 
 direction = None
 running = True
+tick = 0
 while running:
 
 
@@ -50,12 +54,13 @@ while running:
     # Draw
     screen.fill((0,0,0))
 
-    #pg.draw.circle(screen, (220,220,0), (x, y), 20)
-    screen.blit(img, (x, y))
+    r = tick%6
+    screen.blit(pacman_images[r], (x, y))
             
 
     # Update screen
     pg.display.flip()
 
     # Framerate (limit by doing nothing)
+    tick += 1
     time.sleep(0.05)
