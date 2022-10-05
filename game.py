@@ -3,20 +3,45 @@ import time
 import random
 import pygame as pg
 
-## Setup ##
+## Screen setup ##
 pg.init()
-screen = pg.display.set_mode((300,400))
+screen = pg.display.set_mode((600,800))
 pg.display.set_caption("Pac-Man (clone)")
 
-x = 300/2 
-y = 400/2 
 
+
+## Load images ##
 pacman_images = []
 for i in range(6):
     img = pg.image.load(f"images/pacman_{i}.png")
     img = pg.transform.scale(img, (32,32))
     pacman_images.append(img)
 
+
+## Level ##
+level = []
+with open('level.txt', 'r') as level_file:
+    for r, line in enumerate(level_file):
+        row = []
+        for c, char in enumerate(line):
+            if char == "#":
+                row.append("#")
+            elif char == "p":
+                y = r*32
+                x = c*32
+                row.append(" ")
+            else:
+                row.append(" ")
+
+        level.append(row)
+
+num_rows = len(level)
+num_cols = len(level[0])
+
+
+
+
+## Game Loop ##
 direction = None
 running = True
 tick = 0
@@ -51,10 +76,18 @@ while running:
     elif direction == "down":
         y = y + 5
 
-
-    # Draw
+    # Draw level #
     screen.fill((0,0,0))
+    for r, row in enumerate(level):
+        for c, tile in enumerate(row):
+            left = c*32
+            top = r*32
+            if tile == "#":
+                pg.draw.rect(screen, (20,20,220), pg.Rect(left+1, top+1, 30,30), 1)
 
+
+
+    # Draw pacman#
     r = int((tick/2)%6)
     if direction == "left":
         screen.blit(pacman_images[r], (x, y))
