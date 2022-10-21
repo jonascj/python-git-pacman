@@ -3,12 +3,6 @@ import time
 import random
 import pygame as pg
 
-## Screen setup ##
-pg.init()
-screen = pg.display.set_mode((600,800))
-pg.display.set_caption("Pac-Man (clone)")
-
-
 
 ## Load images ##
 pacman_images = []
@@ -27,8 +21,8 @@ with open('level.txt', 'r') as level_file:
             if char == "#":
                 row.append("#")
             elif char == "p":
-                y = r*32
-                x = c*32
+                pacman_row = r
+                pacman_col = c
                 row.append(" ")
             else:
                 row.append(" ")
@@ -38,8 +32,10 @@ with open('level.txt', 'r') as level_file:
 num_rows = len(level)
 num_cols = len(level[0])
 
-
-
+## Screen setup ##
+pg.init()
+screen = pg.display.set_mode((num_cols*32, num_rows*32))
+pg.display.set_caption("Pac-Man (clone)")
 
 ## Game Loop ##
 direction = None
@@ -68,13 +64,17 @@ while running:
 
     # Move
     if direction == "left":
-        x = x - 5
+        if level[pacman_row][pacman_col-1] != "#":
+            pacman_col -= 1
     elif direction == "right":
-        x = x + 5
+        if level[pacman_row][pacman_col+1] != "#":
+            pacman_col += 1
     elif direction == "up":
-        y = y - 5
+        if level[pacman_row-1][pacman_col] != "#":
+            pacman_row -= 1
     elif direction == "down":
-        y = y + 5
+        if level[pacman_row+1][pacman_col] != "#":
+            pacman_row += 1
 
     # Draw level #
     screen.fill((0,0,0))
@@ -82,23 +82,24 @@ while running:
         for c, tile in enumerate(row):
             left = c*32
             top = r*32
+
             if tile == "#":
-                pg.draw.rect(screen, (20,20,220), pg.Rect(left+1, top+1, 30,30), 1)
+                pg.draw.rect(screen, (20,20,220), pg.Rect(left+1, top+1, 32-2,32-2), 1)
 
 
 
     # Draw pacman#
-    r = int((tick/2)%6)
+    r = int((tick/1)%6)
     if direction == "left":
-        screen.blit(pacman_images[r], (x, y))
+        screen.blit(pacman_images[r], (pacman_col*32, pacman_row*32))
     elif direction == "right":
-        screen.blit(pg.transform.rotate(pacman_images[r],180), (x, y))
+        screen.blit(pg.transform.rotate(pacman_images[r],180), (pacman_col*32, pacman_row*32))
     elif direction == "up":
-        screen.blit(pg.transform.rotate(pacman_images[r],-90), (x, y))
+        screen.blit(pg.transform.rotate(pacman_images[r],-90), (pacman_col*32, pacman_row*32))
     elif direction == "down":
-        screen.blit(pg.transform.rotate(pacman_images[r],90), (x, y))
+        screen.blit(pg.transform.rotate(pacman_images[r],90), (pacman_col*32, pacman_row*32))
     else:
-        screen.blit(pacman_images[0], (x, y))
+        screen.blit(pacman_images[0], (pacman_col*32, pacman_row*32))
             
 
     # Update screen
@@ -106,4 +107,4 @@ while running:
 
     # Framerate (limit by doing nothing)
     tick += 1
-    time.sleep(0.05)
+    time.sleep(0.15)
