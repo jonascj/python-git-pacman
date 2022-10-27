@@ -11,6 +11,12 @@ for i in range(6):
     img = pg.transform.scale(img, (32,32))
     pacman_images.append(img)
 
+## Load images ##
+ghost_images = []
+for i in range(2):
+    img = pg.image.load(f"images/ghost_{i}.png")
+    img = pg.transform.scale(img, (32,32))
+    ghost_images.append(img)
 
 ## Level ##
 level = []
@@ -23,6 +29,11 @@ with open('level.txt', 'r') as level_file:
             elif char == "p":
                 pacman_row = r
                 pacman_col = c
+                direction = None
+                row.append(" ")
+            elif char == "g":
+                ghost_row = r
+                ghost_col = c
                 row.append(" ")
             else:
                 row.append(" ")
@@ -44,7 +55,7 @@ tick = 0
 while running:
 
 
-    # Event loop
+    # Event loop #
     events = pg.event.get()
     for event in events:
         if event.type == pg.QUIT:
@@ -62,7 +73,7 @@ while running:
             elif event.key == pg.K_ESCAPE:
                 running = False
 
-    # Move
+    # Move pacman #
     if direction == "left":
         if level[pacman_row][pacman_col-1] != "#":
             pacman_col -= 1
@@ -76,6 +87,16 @@ while running:
         if level[pacman_row+1][pacman_col] != "#":
             pacman_row += 1
 
+    # Move ghost #
+    if random.choice([0,1]) == 0:
+        dc = random.choice([-1,1])
+        if level[ghost_row][ghost_col+dc] != "#":
+            ghost_col += dc
+    else:
+        dr = random.choice([-1,1])
+        if level[ghost_row+dr][ghost_col] != "#":
+            ghost_row += dr 
+
     # Draw level #
     screen.fill((0,0,0))
     for r, row in enumerate(level):
@@ -88,7 +109,7 @@ while running:
 
 
 
-    # Draw pacman#
+    # Draw pacman #
     r = int((tick/1)%6)
     if direction == "left":
         screen.blit(pacman_images[r], (pacman_col*32, pacman_row*32))
@@ -100,6 +121,10 @@ while running:
         screen.blit(pg.transform.rotate(pacman_images[r],90), (pacman_col*32, pacman_row*32))
     else:
         screen.blit(pacman_images[0], (pacman_col*32, pacman_row*32))
+
+    # Draw ghost #
+    r = int((tick/1)%2)
+    screen.blit(ghost_images[r], (ghost_col*32, ghost_row*32))
             
 
     # Update screen
