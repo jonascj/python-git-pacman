@@ -35,6 +35,8 @@ with open('level.txt', 'r') as level_file:
                 ghost_row = r
                 ghost_col = c
                 row.append(" ")
+            elif char == ".":
+                row.append(".")
             else:
                 row.append(" ")
 
@@ -97,6 +99,10 @@ while running:
         if level[ghost_row+dr][ghost_col] != "#":
             ghost_row += dr 
 
+    # Collision pacman/dots #
+    if level[pacman_row][pacman_col] == ".":
+        level[pacman_row][pacman_col] = " "
+
     # Draw level #
     screen.fill((0,0,0))
     for r, row in enumerate(level):
@@ -106,8 +112,8 @@ while running:
 
             if tile == "#":
                 pg.draw.rect(screen, (20,20,220), pg.Rect(left+1, top+1, 32-2,32-2), 1)
-
-
+            elif tile == ".":
+                pg.draw.circle(screen, (255,220,150), (left+32/2, top+32/2), 3)
 
     # Draw pacman #
     r = int((tick/1)%6)
@@ -127,9 +133,9 @@ while running:
     screen.blit(ghost_images[r], (ghost_col*32, ghost_row*32))
             
 
-    # Update screen
+    # Update screen #
     pg.display.flip()
 
-    # Framerate (limit by doing nothing)
+    # Framerate (limit by doing nothing) #
     tick += 1
     time.sleep(0.15)
