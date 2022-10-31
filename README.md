@@ -1,4 +1,6 @@
-# Pac-Man with Python and git
+# Pac-Man with Python and git 2
+Some sick changes yo!
+
 Pac-Man clone made for the purpose learning/teaching Python and git/github.
 
 The game has shortcomings as a game and as a software project,
